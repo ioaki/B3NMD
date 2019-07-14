@@ -1,0 +1,148 @@
+#define WINVER 0x0500
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <unistd.h>
+#include <windows.h>
+
+using namespace std;
+
+void SetA(BOOL bState)
+{
+    BYTE keyState[256];
+
+    GetKeyboardState((LPBYTE)&keyState);
+    if( (bState && !(keyState[VK_NUMLOCK] & 1)) ||
+            (!bState && (keyState[VK_NUMLOCK] & 1)) )
+    {
+        // Simulate a key press
+        keybd_event( VK_NUMLOCK,
+                     0,
+                     KEYEVENTF_EXTENDEDKEY | 0,
+                     0 );
+
+        // Simulate a key release
+        keybd_event( VK_NUMLOCK,
+                     0,
+                     KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP,
+                     0);
+    }
+}
+void SetB(BOOL bState)
+{
+    BYTE keyState[256];
+
+    GetKeyboardState((LPBYTE)&keyState);
+    if( (bState && !(keyState[VK_CAPITAL] & 1)) ||
+            (!bState && (keyState[VK_CAPITAL] & 1)) )
+    {
+        // Simulate a key press
+        keybd_event( VK_CAPITAL,
+                     0,
+                     KEYEVENTF_EXTENDEDKEY | 0,
+                     0 );
+
+        // Simulate a key release
+        keybd_event( VK_CAPITAL,
+                     0,
+                     KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP,
+                     0);
+    }
+}
+void SetC(BOOL bState)
+{
+    BYTE keyState[256];
+
+    GetKeyboardState((LPBYTE)&keyState);
+    if( (bState && !(keyState[VK_SCROLL] & 1)) ||
+            (!bState && (keyState[VK_SCROLL] & 1)) )
+    {
+        // Simulate a key press
+        keybd_event( VK_SCROLL,
+                     0,
+                     KEYEVENTF_EXTENDEDKEY | 0,
+                     0 );
+
+        // Simulate a key release
+        keybd_event( VK_SCROLL,
+                     0,
+                     KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP,
+                     0);
+    }
+}
+
+
+int main()
+{
+
+    SetA(FALSE);
+    SetB(FALSE);
+    SetC(FALSE);
+
+    int a,N=0;
+    char mat;
+    int archivo[100];
+
+
+    //DETECTA ARCHIVO Y CREA ARREGLO CON LOS NUMEROS DECIMALKES
+    FILE *f;
+
+    f = fopen("msg.txt","r");
+
+    while(archivo[N-1]!=EOF)
+    {
+        archivo[N++]=fgetc(f);
+    }
+
+//SEÑAL DE INICIO
+    Sleep(1000);
+    SetB(TRUE);
+    Sleep(2000);
+    SetB(FALSE);
+    Sleep(1000);
+
+    //TRANSFORMA EL ARRAY A BINARIO
+    for(int x=0; x<N; x++)
+    {
+        a=archivo[x];
+
+        char num[8];
+        for(int i=7; i>=0; i--)
+            num[i]='1';
+
+        num[8]='\0';
+
+        for(int i=7; i>=0; i--)
+        {
+            if(a%2==0)
+                num[i]='0';
+            a=a/2;
+        }
+
+
+
+        //ENCIENDE LET BIT A BIT
+        for(int i=0; i<8; i++)
+        {
+
+            printf("%c",num[i]);
+            if(num[i]=='0')
+            {
+                SetA(TRUE);
+                Sleep(1000);
+                SetA(FALSE);
+            }
+            if(num[i]=='1')
+            {
+                SetC(TRUE);
+                Sleep(1000);
+                SetC(FALSE);
+
+            }
+
+        }
+    }
+
+    return 0;
+}
