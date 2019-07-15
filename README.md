@@ -25,7 +25,7 @@ La idea del proyecto es poder enviar mensajes provientes de un archivo dde texto
 
 Corresponde la siguiente secuencia:
 1. -todos se apagan-
-2. Se enciende B, se apaga B. [Secuencia de inicialización
+2. Se enciende B, se apaga B. [Secuencia de inicialización]
 3. Inicia la secuencia de 0's y 1's.
 
 *NOTA:
